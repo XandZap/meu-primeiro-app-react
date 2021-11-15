@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Planet from "./planet";
 import "./style.css";
 
@@ -8,65 +8,53 @@ async function getPlanets() {
     return data;
 }
 
-class Planets extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            planets: [],
-        };
-    }
+const Planets = () => {
 
-    componentDidMount() {
+    const [planets, setPlanet] = useState([])
+
+    useEffect(() => {
         getPlanets().then(data => {
-            this.setState(state => ({
-                planets: data['planets']
-            }))
+            setPlanet(data['planets'])
         })
-    }
+    }, [])
 
-    duplicateLastPlanet = () => {
-        let last_planet = this.state.planets[this.state.planets.length - 1];
-        this.setState((state) => ({
-            planets: [...this.state.planets, last_planet],
-        }));
-    };
-
-    removeLast = () => {
-        let new_planets = [...this.state.planets];
+    const removeLast = () => {
+        let new_planets = [...planets];
         new_planets.pop();
-        this.setState((state) => ({
-            planets: new_planets,
-        }));
+        setPlanet(new_planets);
     };
 
-    render() {
-        return (
-            <div className="planets">
-                <h3>Planet List</h3>
+    const duplicateLastPlanet = () => {
+        let last_planet = planets[planets.length - 1];
+        setPlanet([...planets, last_planet]);
+    };
+
+    return (
+        <div className="planets">
+            <h3>Planet List</h3>
+            <hr />
+            <section className="button">
+                <button onClick={removeLast}>Remover Ultimo</button>
+                <button onClick={duplicateLastPlanet}>
+                    Duplicar Ultimo Planeta
+                </button>
                 <hr />
-                <section className="button">
-                    <button onClick={this.removeLast}>Remover Ultimo</button>
-                    <button onClick={this.duplicateLastPlanet}>
-                        Duplicar Ultimo Planeta
-                    </button>
-                <hr/>
-                </section>
-                <section className="planetConteiner">
-                    {this.state.planets.map((planet, index) => (
-                        <Planet
-                            id={planet.id}
-                            name={planet.name}
-                            img_url={planet.img_url}
-                            description={planet.description}
-                            url={planet.link}
-                            title_with_underline={true}
-                            key={index}
-                        />
-                    ))}
-                </section>
-            </div>
-        );
-    }
+            </section>
+            <section className="planetConteiner">
+                {planets.map((planet, index) => (
+                    <Planet
+                        id={planet.id}
+                        name={planet.name}
+                        img_url={planet.img_url}
+                        description={planet.description}
+                        url={planet.link}
+                        title_with_underline={true}
+                        key={index}
+                    />
+                ))}
+            </section>
+        </div>
+    );
 }
 
 export default Planets;

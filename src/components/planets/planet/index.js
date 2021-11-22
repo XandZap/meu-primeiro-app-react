@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import GrayImg from '../../shared/gray-img'
 import DescriptionWithLink from '../../shared/DescriptionWithLink'
 import './style.css'
-import Form from '../../planet/form'
-
+import { Link } from 'react-router-dom'
 
 const Planet = (props) => {
 
@@ -15,13 +14,14 @@ const Planet = (props) => {
 
     return (
         <div>
-            {title}
+            <Link to={`/planet/${props.id}`}>{title}</Link>
             <DescriptionWithLink
                 description={props.description}
                 url={props.url} />
             <GrayImg
                 img_url={props.img_url}
                 grey={props.grey} />
+            
             <hr />
         </div>
     )
